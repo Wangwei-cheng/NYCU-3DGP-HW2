@@ -1,0 +1,62 @@
+material Examples/green
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0 0.0 0.0 1.0
+			diffuse 0.0 0.8 0.0 1.0
+			specular 0.0 0.0 0.0 1.0 12.5
+
+
+		}
+	}
+}
+
+material Examples/blue
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0 0.0 0.0 1.0
+			diffuse 0.0 0.0 0.8 1.0
+			specular 0.0 0.0 0.8 1.0 12.5
+
+
+		}
+	}
+}
+
+material Examples/yellow
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.0 1.0
+			diffuse 0.9 0.9 0.0 1.0
+			specular 0.0 0.0 0.0 1.0 12.5
+
+
+		}
+	}
+}
+
+material Examples/myMaterial
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				texture 10points.png
+				scroll_anim 0.1 0
+			}
+		}
+	}
+}
