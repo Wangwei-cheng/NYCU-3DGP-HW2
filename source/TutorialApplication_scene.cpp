@@ -104,9 +104,9 @@ void BasicTutorial_00::createScene_Setup_FX(void) {
 		++i) {
 		if (i >= mNumofObjects) break;
 
-		/*mFXManager->setOffParticleSystem(
-			position of mSceneNodeArr[i]
-		);*/
+		mFXManager->setOffParticleSystem(
+			mSceneNodeArr[i]->getPosition()
+		);
 	}
 }
 

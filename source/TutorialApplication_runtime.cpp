@@ -73,13 +73,12 @@ void BasicTutorial_00::frameRendered(const Ogre::FrameEvent& evt)
 	if (mFlg_view_left) {
 		MouseMotionEvent tmparg;
 		tmparg.x = 0;
-			tmparg.y = 0;
-			tmparg.xrel = -1;
-			tmparg.yrel = 0;
-			mFlg_view_left = true;
+		tmparg.y = 0;
+		tmparg.xrel = -1;
+		tmparg.yrel = 0;
+		mFlg_view_left = true;
 
-			mCameraMan->mouseMoved(tmparg);
-		
+		mCameraMan->mouseMoved(tmparg);
 	}
 
 	if (mFlg_view_right) {
@@ -91,7 +90,6 @@ void BasicTutorial_00::frameRendered(const Ogre::FrameEvent& evt)
 		mFlg_view_right = true;
 
 		mCameraMan->mouseMoved(tmparg);
-
 	}
 
     //cout << "isDialogVisible:" << mTrayMgr->isDialogVisible() << endl;
