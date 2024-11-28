@@ -1,3 +1,7 @@
 .vs/
 OgreProject_01/
 x64/Release/
+
+*.sln
+*.vcxproj.filters
+*.vcxproj.user
