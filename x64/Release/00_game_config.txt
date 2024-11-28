@@ -1,5 +1,0 @@
-GAME_DATA_FILE 00_game_data_01.txt
-
-#GAME_DATA_FILE 00_game_data_02.txt
-
-#GAME_DATA_FILE 00_game_data_03.txt
