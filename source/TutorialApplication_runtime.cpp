@@ -132,7 +132,7 @@ void BasicTutorial_00::lookAt_smooth(
 	Quaternion q0 = node->getOrientation();
 
 	node->lookAt(lookAtTarget, Node::TS_WORLD);
-	node->yaw(Degree( -45 ));
+	node->yaw(Degree(offset_angle_degree));
 
 	//desired orientation
 	Quaternion q1 = node->getOrientation();
@@ -142,7 +142,7 @@ void BasicTutorial_00::lookAt_smooth(
 	Real r = f * dt;
 	if (r > 1.0) r = 1.0; // safe guard
 
-	//node->setOrientation(slerp(q0, q1, r));
+	node->setOrientation(slerp(q0, q1, r));
 }
 
 
@@ -162,7 +162,7 @@ void BasicTutorial_00::updateObjects_Positions(Real dt)
 		Real robotTargetDistance = len;
 		if (len != 0.0) d.normalise();
 		
-		Real walkSpeed = 400; // incorrect. It is too large
+		Real walkSpeed = 100;
 		//Real walkSpeed = [80, 100];
 
 		Real walkDistance = walkSpeed * dt;
@@ -175,20 +175,18 @@ void BasicTutorial_00::updateObjects_Positions(Real dt)
 			d = d * walkDistance;
 			Vector3 robotLookAtPosition = mTargetPosition;
 			
-			//robotLookAtPosition.y = mSceneNodeArr[i]->getPosition().y; // do you need to set the y-coordinate the same?
+			robotLookAtPosition.y = mSceneNodeArr[i]->getPosition().y; // do you need to set the y-coordinate the same?
 
 			lookAt_smooth(
 				mSceneNodeArr[i]
 				, robotLookAtPosition
-				, 45						// correct angle is? angle correction is needed?
+				, READER_DATA::getYawAngleDegreeOffset_Pet()			// correct angle is? angle correction is needed?
 				, dt
 			);
 		}
 
 		mObjectDisplacement[i] = d;
 		mSceneNodeArr[i]->translate(d);
-
-		
 	}
 }
 
@@ -209,6 +207,8 @@ void BasicTutorial_00::updateObjects_Animation(Real dt)
 			// add your own stuff or modify
 			// Enable the animation and set loop
 			//
+			mAnimationStateArr[i]->setEnabled(true);
+			mAnimationStateArr[i]->setLoop(true);
 		}
 		else {
 			if (mAnimationStateArr[i]) {
@@ -219,8 +219,8 @@ void BasicTutorial_00::updateObjects_Animation(Real dt)
 			//
 			// add your own stuff or modify
 			//
-			//mAnimationStateArr[i]->setEnabled(true);
-			//mAnimationStateArr[i]->setLoop(true);
+			mAnimationStateArr[i]->setEnabled(true);
+			mAnimationStateArr[i]->setLoop(true);
 		}
 	}
 
@@ -228,7 +228,7 @@ void BasicTutorial_00::updateObjects_Animation(Real dt)
 	// add time to the animation clip
 	//
 	for (int i = 0; i < mNumofObjects; ++i) {
-		//mAnimationStateArr[i]->addTime(dt * 2);
+		mAnimationStateArr[i]->addTime(dt * 2);
 	}
 }
 
@@ -252,7 +252,7 @@ void BasicTutorial_00::checkObjects_ReachingTarget(Real dt)
 
 	double region_scale = 3;
 	if (mNumOfMovingObj >= 1) {
-		threshold = 10; // do you know how large a robot is? Can all the robots move to a single point?
+		threshold = 100; // do you know how large a robot is? Can all the robots move to a single point?
 	}
 
 	for (int i = 0; i < mNumofObjects; ++i)
@@ -265,13 +265,13 @@ void BasicTutorial_00::checkObjects_ReachingTarget(Real dt)
 		//Real result = (mTargetPosition - curPos).dotProduct(displacement);
 
 		Vector3 pq = mTargetPosition - curPos;	// difference between two points, i.e., the vector between them
-		//pq.y = 0;								// ignore the y-coordinate difference, i.e., the height.
+		pq.y = 0;								// ignore the y-coordinate difference, i.e., the height.
 		Real result = pq.length();				// consider the vector length on the x-z plane only.
 
 		if (result <= threshold) {
 			// The robot reaches the target position.
 			++mNumOfObjectsReachedTarget;
-			//mSceneNodeArr[i]->showBoundingBox(false);
+			mSceneNodeArr[i]->showBoundingBox(false);
 		}
 	}
 }

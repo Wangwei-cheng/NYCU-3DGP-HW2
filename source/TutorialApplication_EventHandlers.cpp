@@ -663,7 +663,7 @@ bool BasicTutorial_00::mouseReleased(const MouseButtonEvent& arg)
     mCameraMan->mouseReleased(arg);
     if (mTrayMgr->mouseReleased(arg)) return true;
     
-
+    
     return true;
 }
 

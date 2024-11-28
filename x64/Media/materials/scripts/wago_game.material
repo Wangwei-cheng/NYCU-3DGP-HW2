@@ -64,7 +64,7 @@ material Examples/Digits
 
 			texture_unit
 			{
-				texture digits.jpg
+				texture numbers.jpg
 			}
 		}
 	}

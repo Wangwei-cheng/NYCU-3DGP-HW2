@@ -43,10 +43,10 @@ public:
 		// Can you draw the coordinates of both coordinate systems?
 		// Add your own stuff or modify
 		left = left * 2 - 1;
-		right = 1 - right * 2;
+		right = right * 2 - 1;
 
-		top = top * 2 - 1;
-		bottom =  bottom *2 - 1;
+		top = 1 - top * 2;
+		bottom = 1 - bottom *2;
 
 
 		//////////////////////////

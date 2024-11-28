@@ -59,7 +59,7 @@ void BasicTutorial_00::placeOnTerrain(SceneNode *node) {
 void BasicTutorial_00::createLights( ) 
 {
 
-//    mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
+    mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
 
    // return;
 
@@ -193,7 +193,7 @@ void BasicTutorial_00::createPlaneObjectResource()
 	MeshManager::getSingleton().createPlane(
 		"ground_00", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		plane,
-		100, 100, 	// width, height
+		1800, 1800, 	// width, height
 		20, 20, 		// x- and y-segments
 		true, 		// normal
 		1, 		// num texture sets
@@ -212,17 +212,16 @@ void BasicTutorial_00::createGround()
 	ent->setMaterialName("Examples/BeachStones");
 	ent->setQueryFlags(0x0);
 
-	mEntity_Ground = ent;
-	//
 	mSceneNode_Ground = mSceneMgr
 		->getRootSceneNode()
 		->createChildSceneNode(Vector3(0.0, -30.0, 0.0));
 
 	mSceneNode_Ground->attachObject(ent);
-	//
-	//mSceneNode_Ground->setPosition(mGamePosition + Vector3(0, -200, 0));
-	//mSceneNode_Ground->translate(Vector3(0, -20, 0));
-	//
+	mEntity_Ground = ent;
+	
+	mSceneNode_Ground->setPosition(mGamePosition + Vector3(0, -200, 0));
+	mSceneNode_Ground->translate(Vector3(0, -20, 0));
+	
 }
 
 // Add your own stuff or modify
@@ -240,11 +239,10 @@ void BasicTutorial_00::createFloor()
 		->getRootSceneNode()
 		->createChildSceneNode();
 
-
 	mSceneNode_Floor->attachObject(ent);
 	mEntity_Floor = ent;
 
-	//mSceneNode_Floor->setPosition(mGamePosition + Vector3(0,-200,0));
+	mSceneNode_Floor->setPosition(mGamePosition + Vector3(0, -200,0));
 
 }
 
@@ -264,10 +262,10 @@ void BasicTutorial_00::createSphere()
 	sphere_scn->attachObject(sphere_ent);
 	auto bb = sphere_ent->getBoundingBox();
 	Real sizeX = bb.getMaximum().x - bb.getMinimum().x;
-	//Real sf = 2 * mSphere_Radius / sizeX;
-	Real sf = 10.0;
+	Real sf = 2 * mSphere_Radius / sizeX;
+	/*Real sf = 10.0;*/
 	sphere_scn->scale(sf, sf, sf);
-	//sphere_ent->setMaterialName( ... );
+	sphere_ent->setMaterialName("Examples/SphereMappedRustySteel");
 
 	sphere_scn->translate( Vector3(0, -200, 0 ));
 	mSphere_Position = sphere_scn->getPosition();
@@ -278,8 +276,6 @@ void BasicTutorial_00::createSphere()
 //
 void BasicTutorial_00::createObjects()
 {
-	
-
 	int i;
 	std::string petMeshName = READER_DATA::getMeshName_Pet();
 	float scale = READER_DATA::getMeshScale_Pet();
@@ -290,7 +286,6 @@ void BasicTutorial_00::createObjects()
 	Real r = 350;
 	for (int k = 0; k < numRobots; ++k, ++mNumofObjects)
 	{
-
 		i = k;
 		String name;
 		genNameUsingIndex("robot_", i, name);
@@ -313,14 +308,10 @@ void BasicTutorial_00::createObjects()
 			->getRootSceneNode()
 			->createChildSceneNode();
 
-
-		//
-		// The positions are wrong.
-		//
 		Vector3 p;
-		Real a = i / (Real)numRobots * 3.1415 * 2.0;
-		p.x = r * i / (double) 10.0;
-		p.z = 0;
+		Real a = i / (Real)numRobots * PI * 2.0;
+		p.x = r * cos(a);
+		p.z = r * sin(a);
 
 		p.y = 0.0;
 
@@ -352,10 +343,9 @@ void BasicTutorial_00::createObjects()
 	r = 250;
 	for (int k = 0; k < numRobots; ++k, ++mNumofObjects)
 	{
-
 		i = k + numRobots;
 		String name;
-		genNameUsingIndex("r", i, name);
+		genNameUsingIndex("robot_inside_", i, name);
 
 		mEntityArr[i]
 			= mSceneMgr
@@ -373,13 +363,10 @@ void BasicTutorial_00::createObjects()
 			->getRootSceneNode()
 			->createChildSceneNode();
 
-		//
-		// The positions are wrong.
-		//
 		Vector3 p;
-		Real a = i / (Real)numRobots * 3.1415 * 2.0;
-		p.x = r * a;
-		p.z = 0.0;
+		Real a = i / (Real)numRobots * PI * 2.0;
+		p.x = r * cos(a);
+		p.z = r * sin(a);
 
 		p.y = 0.0;
 
@@ -446,12 +433,10 @@ void BasicTutorial_00::createScene_00(void)
 void BasicTutorial_00::createTerrain() 
 {
     ns_Debug_Tool::printf<const char*>("BasicTutorial_00::createTerrain():", mTrayMgr);
-	MyTerrain* terrain = nullptr;
-	//
-	// Add your own stuff or modify
-	//
-
-	
+	MyTerrain* terrain = new MyTerrain(mSceneMgr, mCamera, mCameraNode, mTrayMgr);
+	terrain->setupContent();
+	terrain->setupControls();
+	terrain->setShaderGenerator(Ogre::RTShader::ShaderGenerator::getSingletonPtr());
     mMyTerrain = terrain;
     return;
 }

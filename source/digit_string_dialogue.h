@@ -35,29 +35,41 @@ class FilledRectangle : public ManualObject
 		topRight.x = 1;
 		topRight.y = 0;
 
-		Real dx = 1/10.0;
-		bottomLeft.x = dx*digit;
+		Real dx = 1 / 4.0;
+		Real dy = 1 / 3.0;
+		if (digit != 9 && digit != 0) {
+			bottomLeft.x = dx * ((digit - 1) % 4);
+			bottomLeft.y = dy * ((digit - 1) / 4) + dy;
+		}
+		else if (digit == 9) {
+			bottomLeft.x = dx;
+		}
+		else if (digit == 0) {
+			bottomLeft.x = dx * 2;
+		}
 		topRight.x = bottomLeft.x + dx;
-		if (1) {
-			//do correction
-			topRight.x = bottomLeft.x + dx*0.9;
-		}
-		if (digit == 0) {
-			//do correction
-			bottomLeft.x = dx*digit +dx*0.05;
-		}
-		if (digit == 1) {
-			//do correction
-			topRight.x = topRight.x +dx*0.1;
-		}
-		if (digit == 2) {
-			//do correction
-			bottomLeft.x = bottomLeft.x +dx*0.05;
-		}
-		if (digit == 3) {
-			//do correction
-			bottomLeft.x = bottomLeft.x -dx*0.1;
-		}
+		topRight.y = bottomLeft.y - dy;
+		//TODO
+		//if (1) {
+		//	//do correction
+		//	topRight.x = bottomLeft.x + dx*0.9;
+		//}
+		//if (digit == 0) {
+		//	//do correction
+		//	bottomLeft.x = dx*digit +dx*0.05;
+		//}
+		//if (digit == 1) {
+		//	//do correction
+		//	topRight.x = topRight.x +dx*0.1;
+		//}
+		//if (digit == 2) {
+		//	//do correction
+		//	bottomLeft.x = bottomLeft.x +dx*0.05;
+		//}
+		//if (digit == 3) {
+		//	//do correction
+		//	bottomLeft.x = bottomLeft.x -dx*0.1;
+		//}
 	}
 public:
     FilledRectangle(const String &name, int digit)

@@ -73,7 +73,7 @@ void BasicTutorial_00::init() {
     //
     mPetCounter = nullptr;
     mNumberOfPets = 0;
-    mFlgTarget = 0;
+    mFlgTarget = false;
 
     //
     mSphere_Radius = 100;

@@ -40,7 +40,7 @@ void DIGIT_STRING_DIALOGUE::createObjs(const String &a_Material_Name)
 		for (i = 0; i < 10; i++) {
 			int index = i + j*10;			
 			genNameUsingIndex("fName", index, name);
-			fr[index] = new FilledRectangle(name, mMaterialName, i);
+			fr[index] = new FilledRectangle(name, a_Material_Name, i);
 			mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(fr[index]);
 			fr[index]->setVisible(false);
 		}

@@ -51,11 +51,11 @@ void BasicTutorial_00::computeTargetPosition()
 	mTargetPosition = ray.getOrigin() + result.second * ray.getDirection();
 	*/
 
-	//mFlgTarget = true;
+	mFlgTarget = true;
 	mTargetPosition = mGamePosition + Vector3(0, 100, 0);
 
 	if (mMyTerrain) {
-		//mTargetPosition = mMyTerrain->getMarkerPosition();
+		mTargetPosition = mMyTerrain->getMarkerPosition();
 	}
 
 }
@@ -104,25 +104,25 @@ bool BasicTutorial_00::mouseMoved_Selection(const MouseMotionEvent& arg)
 
 	if (mFlgSelectNow != true) return true;
 
-		Ray mRay = mTrayMgr->getCursorRay(mCamera);
+	Ray mRay = mTrayMgr->getCursorRay(mCamera);
 
-		Vector2 scn = mTrayMgr->sceneToScreen(mCamera, mRay.getOrigin());
-		left = scn.x;
-		top = scn.y;
-		cout << "left:" << left << endl;
-		cout << "top:" << top << endl;
-		/*
-		Ogre::String ss;
-		ss = Ogre::StringConverter::toString(left);
-		Ogre::LogManager::getSingletonPtr()->logMessage("left:" + ss);
+	Vector2 scn = mTrayMgr->sceneToScreen(mCamera, mRay.getOrigin());
+	left = scn.x;
+	top = scn.y;
+	cout << "left:" << left << endl;
+	cout << "top:" << top << endl;
+	/*
+	Ogre::String ss;
+	ss = Ogre::StringConverter::toString(left);
+	Ogre::LogManager::getSingletonPtr()->logMessage("left:" + ss);
 
-		ss = Ogre::StringConverter::toString(top);
-		Ogre::LogManager::getSingletonPtr()->logMessage("top:" + ss);
-		*/
-		mSelectionRect->setCorners(left, top, right, bottom);
-		mSelectionRect->setVisible(true);
+	ss = Ogre::StringConverter::toString(top);
+	Ogre::LogManager::getSingletonPtr()->logMessage("top:" + ss);
+	*/
+	mSelectionRect->setCorners(left, top, right, bottom);
+	mSelectionRect->setVisible(true);
 
-		return false;
+	return false;
 
 }
 
@@ -141,7 +141,7 @@ bool BasicTutorial_00::mouseReleased_Selection(const MouseButtonEvent& arg)
 		//return BaseApplication::mouseReleased(arg, id);
 	}
 	
-	//mFlgTarget = false;
+	mFlgTarget = false;
 
 	if (mFlgSelectNow == true) {
 
@@ -149,15 +149,12 @@ bool BasicTutorial_00::mouseReleased_Selection(const MouseButtonEvent& arg)
 		{
 			//mSceneNodeArr[i]->showBoundingBox(false);
 		}
-		if (left == right
-			&&
-			top == bottom)
+		if (left == right && top == bottom)
 		{
 			mNumberOfPets = singleClickSelect(arg);
 			bindAvatar_Selection( );
 
 			cout << "mouseReleased_Selection:singleClickSelect:" << mNumberOfPets << endl;
-
 		}
 		else {
 			mNumberOfPets = volumeSelection(arg);
@@ -172,11 +169,10 @@ bool BasicTutorial_00::mouseReleased_Selection(const MouseButtonEvent& arg)
 			if (flg) mNumOfMovingObj++;
 		}
 
-
 		mFlgSelectNow = false;
 		mSelectionRect->setVisible(false);
 	}
-
+	
 	return false;
 	//return BaseApplication::mouseReleased(arg, id);
 
@@ -193,37 +189,37 @@ int BasicTutorial_00::singleClickSelect(const MouseButtonEvent& arg)
 
 	Ray mRay = mTrayMgr->getCursorRay(mCamera);
 
-	//mRaySceneQuery = mSceneMgr->createRayQuery(Ray());
+	RaySceneQuery* mRaySceneQuery = mSceneMgr->createRayQuery(Ray());
 
-	//mRaySceneQuery->setSortByDistance(true);
+	mRaySceneQuery->setSortByDistance(true);
 
-	//mRaySceneQuery->setRay(mRay);
+	mRaySceneQuery->setRay(mRay);
 	//Perform the scene query
-	//RaySceneQueryResult& result = mRaySceneQuery->execute();
-	//RaySceneQueryResult::iterator itr = result.begin();
+	RaySceneQueryResult& result = mRaySceneQuery->execute();
+	RaySceneQueryResult::iterator itr = result.begin();
 
 	// Get the results, set the camera height
 	// We are interested in the first intersection. It is ok to traverse all the results.
-	//for (itr = result.begin(); itr != result.end(); itr++) {
+	for (itr = result.begin(); itr != result.end(); itr++) {
 
 		//if (itr->movable && itr->movable->getName().substr(0, 5) != "tile[" )
-		//if ( itr->movable )
-		//{
-		//	if (itr->movable->getName().substr(0, 5) != "robot") continue;
+		if ( itr->movable )
+		{
+			if (itr->movable->getName().substr(0, 5) != "robot") continue;
 
-		//	node = itr->movable->getParentSceneNode();
-		//	
-		//	if (mAvatarController->isSameAvatar(node)) continue;
+			SceneNode* node = itr->movable->getParentSceneNode();
+			
+			if (mAvatarController->isSameAvatar(node)) continue;
 
-		//	mCurrentObject = node;
-		//	if (mCurrentObject == mSphere_Node) continue;
-		//	flgShow = mCurrentObject->getShowBoundingBox();
-		//	flgShow = !flgShow;
-		//	mCurrentObject->showBoundingBox(flgShow);
-		//	if (flgShow) numSelectedObj = 1;
-		//	break;
-		//} // if
-	//}
+			mCurrentObject = node;
+			if (mCurrentObject == mSphere_Node) continue;
+			bool flgShow = mCurrentObject->getShowBoundingBox();
+			flgShow = !flgShow;
+			mCurrentObject->showBoundingBox(flgShow);
+			if (flgShow) numSelectedObj = 1;
+			break;
+		}
+	}
 
 	return numSelectedObj;
 }
@@ -236,10 +232,14 @@ int BasicTutorial_00::volumeSelection(const MouseButtonEvent& arg)
 	int numSelectedObj = 0;
 	//
 	if (left > right) {
-		// left or right?
+		Real temp = left;
+		left = right;
+		right = temp;
 	}
 	if (bottom < top) {
-		// bottom or top?
+		Real temp = bottom;
+		bottom = top;
+		top = temp;
 	}
 
 	cout << "left:" << left << endl;
@@ -288,22 +288,17 @@ int BasicTutorial_00::volumeSelection(const MouseButtonEvent& arg)
 			
 			mCurrentObject = (*itr)->getParentSceneNode();
 
-			// is it the sphere node?
 			if (mCurrentObject == mSphere_Node) {
-				//
-				// if yes, ignore this node. and check another node.
-				//
-				
-				// mCurrentObject = 0;
-				// continue;
+				mCurrentObject = 0;
+				continue;
 			}
 
 			// So mCurrentObject is a robot node.
 			// Toggle the boundng box
 			// Also, update the number of selected robots.
 			bool flgShow = mCurrentObject->getShowBoundingBox();
-			//flgShow = !flgShow;
-			//mCurrentObject->showBoundingBox(flgShow);
+			flgShow = !flgShow;
+			mCurrentObject->showBoundingBox(flgShow);
 			if (flgShow)  ++numSelectedObj;
 		}
 	}
